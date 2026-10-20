@@ -1,0 +1,12 @@
+{
+  "name": "English-Bobins",
+  "short_name": "English",
+  "description": "Englisch üben – Vokabeln, Rechtschreibung, Grammatik",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF5EC",
+  "theme_color": "#FBF5EC",
+  "lang": "de",
+  "icons": [{ "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

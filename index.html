@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English-Bobins · Robin's Bobins</title>
+<meta name="description" content="Englisch üben: Vokabeln mit Wiederholung, Rechtschreib-Hilfen, Grammatik und Klassenarbeit-Vorbereitung (Green Line, Klasse 5–6).">
+<meta name="theme-color" content="#FBF5EC">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/english.css">
+</head>
+<body>
+<div class="shell">
+  <header class="bar">
+    <span class="bar-left">
+      <a class="link" id="apps-link" href="#">‹ Meine Apps</a>
+      <button class="link" id="back" type="button" hidden>‹ Zurück</button>
+    </span>
+    <a class="wordmark" href="#/home"><span class="wm-flag" aria-hidden="true">EN</span><span>English-<b>Bobins</b></span></a>
+    <span class="bar-right">
+      <span class="coin-pill" id="coin-pill" hidden title="Robin-Münzen"><span class="eb-coin" aria-hidden="true"></span><span id="coins">0</span></span>
+      <a class="link small" id="parent-link" href="#/eltern">Eltern</a>
+    </span>
+  </header>
+  <main id="main" aria-live="polite"></main>
+</div>
+<noscript>English-Bobins braucht JavaScript.</noscript>
+
+<!-- Robin's Bobins (optional). Same site on GitHub Pages → family PIN, child, Robin, coins, streaks.
+     Without these files (running on its own) the app works alone, as Lukas.
+     Guest link ?gast=<Name> (a classmate): the guest start page instead of the family. -->
+<script>
+(function () {
+  var q = location.search, m = /[?&]gast=([^&#]*)/.exec(q), g = '';
+  try {
+    g = m ? decodeURIComponent(m[1]).trim() : '';
+    if (g) localStorage.setItem('rb-gast', JSON.stringify(g));
+    else if (!/[?&]child=/.test(q)) g = JSON.parse(localStorage.getItem('rb-gast') || 'null') || '';
+  } catch (e) { /* storage blocked: guest only for this visit */ }
+  window.EB_GUEST = g || null;
+  if (g) { window.RB = {}; document.write('<script src="../robins-bobins/shared/robin.js"><\/script><script src="../robins-bobins/shared/guest.js"><\/script>'); }
+  else document.write('<script src="../robins-bobins/shared/rb.js"><\/script><script src="../robins-bobins/shared/robin.js"><\/script>');
+})();
+</script>
+
+<!-- logic (no DOM) -->
+<script src="js/text.js"></script>
+<script src="data/irregular.js"></script>
+<script src="js/check.js"></script>
+<script src="data/demo.js"></script>
+<script src="data/grammar.js"></script>
+<script src="data/vocab.js"></script>
+<script src="js/grammar.js"></script>
+<script src="js/content.js"></script>
+<script src="js/srs.js"></script>
+<script src="js/store.js"></script>
+<script src="js/session.js"></script>
+<script src="js/speech.js"></script>
+<!-- screens -->
+<script src="js/platform.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/practice.js"></script>
+<script src="js/screens.js"></script>
+<script src="js/parent.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
