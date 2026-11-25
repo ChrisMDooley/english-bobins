@@ -332,7 +332,7 @@ with sync_playwright() as p:
 
     # ------------------------------------------------------------ Klassenarbeit: countdown, Probe, Fehler verbessern
     pg.goto(URL + '?child=lukas#/home'); pg.wait_for_selector('.today-btn')
-    check('Klassenarbeit' in pg.inner_text('.hero'), 'countdown on the start page', pg.inner_text('.hero'))
+    check('arbeit' in pg.inner_text('.hero'), 'countdown on the start page', pg.inner_text('.hero'))
     pg.click('.tile:has-text("Klassenarbeit")'); pg.wait_for_selector('.big-actions')
     check('Unit 2' in pg.inner_text('main') and 'Simple past' in pg.inner_text('main'), 'test page shows what comes up')
     pg.click('.list-item:has-text("Probe-Klassenarbeit")'); pg.wait_for_selector('.run-body .card')

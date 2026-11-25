@@ -7,6 +7,7 @@
 
   var content = new EB.Content();
   var store = new EB.Store(P.childId);
+  store.applyDefaultTest();
   var main = document.getElementById('main');
   var backBtn = document.getElementById('back'), appsLink = document.getElementById('apps-link');
   if (P.homeUrl) { appsLink.href = P.homeUrl; if (P.guest) appsLink.textContent = '‹ Start'; } else appsLink.hidden = true;

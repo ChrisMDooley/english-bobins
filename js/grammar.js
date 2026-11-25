@@ -16,6 +16,8 @@
  * Types: lücke · form · verneinen · frage · ordnen · übersetzen · korrigieren
  *   lücke/form: Lukas types only the missing word(s); the others: the whole sentence.
  *   ordnen: the task is the words, separated by " / " (or empty: the words of the answer, mixed).
+ *   hören / lesen: the task is "English text >> question" — hören reads the text aloud (hidden),
+ *   lesen shows it. Without ">> question", hören is a dictation (answer = what was said).
  *
  * The same concept has many exercises, so a mistake comes back later with a DIFFERENT sentence.
  */
@@ -30,7 +32,9 @@
     frage: 'frage', fragen: 'frage', question: 'frage',
     ordnen: 'ordnen', order: 'ordnen', reihenfolge: 'ordnen', 'sätze ordnen': 'ordnen',
     'übersetzen': 'trans', uebersetzen: 'trans', translate: 'trans', 'übersetzung': 'trans',
-    korrigieren: 'fix', korrektur: 'fix', correct: 'fix', 'fehler finden': 'fix'
+    korrigieren: 'fix', korrektur: 'fix', correct: 'fix', 'fehler finden': 'fix',
+    'hören': 'hoeren', hoeren: 'hoeren', listen: 'hoeren', listening: 'hoeren', diktat: 'hoeren',
+    lesen: 'lesen', read: 'lesen', reading: 'lesen'
   };
   var TYPE = {
     luecke: { name: 'Lücke', instr: 'Setze das fehlende Wort ein.', whole: false },
@@ -39,7 +43,9 @@
     frage: { name: 'Frage bilden', instr: 'Bilde eine Frage.', whole: true },
     ordnen: { name: 'Ordnen', instr: 'Bring die Wörter in die richtige Reihenfolge.', whole: true },
     trans: { name: 'Übersetzen', instr: 'Übersetze ins Englische.', whole: true },
-    fix: { name: 'Korrigieren', instr: 'Im Satz ist ein Fehler. Schreib den Satz richtig.', whole: true }
+    fix: { name: 'Korrigieren', instr: 'Im Satz ist ein Fehler. Schreib den Satz richtig.', whole: true },
+    hoeren: { name: 'Hören', instr: 'Hör gut zu (🔊) und beantworte die Frage auf Englisch.', whole: true },
+    lesen: { name: 'Lesen', instr: 'Lies den Text und beantworte die Frage.', whole: true }
   };
 
   function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); }
@@ -61,12 +67,14 @@
       var parts = l.split(/\s*\|\s*/);
       var head = /^([^\[]+?)\s*(?:\[\s*([\w-]+)\s*\])?$/.exec(parts[0] || '');
       var type = head && TYPE_ALIASES[T.norm(head[1])];
-      if (!type) { errors.push({ line: n + 1, text: l, why: 'Unbekannte Art „' + (parts[0] || '') + '“. Möglich: lücke, form, verneinen, frage, ordnen, übersetzen, korrigieren' }); return; }
+      if (!type) { errors.push({ line: n + 1, text: l, why: 'Unbekannte Art „' + (parts[0] || '') + '“. Möglich: lücke, form, verneinen, frage, ordnen, übersetzen, korrigieren, hören, lesen' }); return; }
+      if (type === 'hoeren' && (parts.length < 3 || !T.clean(parts[2])) && T.clean(parts[1] || '') && (parts[1] || '').indexOf('>>') < 0) parts[2] = parts[1];   // dictation: the answer is what was said
       if (parts.length < 3 || !T.clean(parts[2])) { errors.push({ line: n + 1, text: l, why: 'Es fehlt die richtige Antwort (Art | Aufgabe | Antwort | Erklärung)' }); return; }
       var answers = parts[2].split(/\s*;\s*/).map(T.clean).filter(Boolean);
       var q = T.clean(parts[1] || '');
       if (type === 'ordnen' && !q) q = T.shuffle(answers[0].replace(/[.!?]$/, '').split(' '), T.rng(parseInt(hash(answers[0]), 36))).join(' / ');
       if (type !== 'ordnen' && !q) { errors.push({ line: n + 1, text: l, why: 'Die Aufgabe fehlt' }); return; }
+      if (type === 'lesen' && q.indexOf('>>') < 0) { errors.push({ line: n + 1, text: l, why: 'So: lesen | Text >> Frage | Antwort' }); return; }
       var id = modId + ':' + hash(type + '|' + q);
       if (seen[id]) id += '-' + n; seen[id] = 1;
       last = { id: id, mod: modId, type: type, concept: head[2] || modId, instr: instr || TYPE[type].instr, q: q, answers: answers,
@@ -151,6 +159,11 @@
   // what the screen shows for a task: the instruction, the sentence (with "___"), whether one word or a whole sentence
   function task(it) {
     var t = TYPE[it.type];
+    if (it.type === 'hoeren' || it.type === 'lesen') {
+      var p = it.q.split(/\s*>>\s*/), question = T.clean(p.slice(1).join(' ')), dict = it.type === 'hoeren' && !question;
+      return { instr: dict ? 'Hör gut zu (🔊) und schreib auf, was du hörst.' : (it.instr || t.instr), q: p[0], text: T.clean(p[0]), question: question,
+               listen: it.type === 'hoeren', read: it.type === 'lesen', whole: true, typeName: t.name, words: null, de: false };
+    }
     return { instr: it.instr || t.instr, q: it.q, whole: t.whole, typeName: t.name,
              words: it.type === 'ordnen' ? it.q.split(/\s*\/\s*/) : null, de: it.type === 'trans' };
   }
@@ -166,7 +179,7 @@
   }
   function stringify(items) {          // back to text (parent editor: "edit the exercises of a built-in module")
     return items.filter(function (it) { return !it.gen; }).map(function (it) {
-      var name = { luecke: 'lücke', form: 'form', neg: 'verneinen', frage: 'frage', ordnen: 'ordnen', trans: 'übersetzen', fix: 'korrigieren' }[it.type];
+      var name = { luecke: 'lücke', form: 'form', neg: 'verneinen', frage: 'frage', ordnen: 'ordnen', trans: 'übersetzen', fix: 'korrigieren', hoeren: 'hören', lesen: 'lesen' }[it.type];
       var s = name + (it.concept && it.concept !== it.mod ? ' [' + it.concept + ']' : '') + ' | ' + it.q + ' | ' + it.answers.join(' ; ') + (it.why ? ' | ' + it.why : '');
       Object.keys(it.wrongs || {}).forEach(function (w) { s += '\n~ ' + w + ' = ' + it.wrongs[w]; });
       return s;

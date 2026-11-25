@@ -89,6 +89,20 @@ Eingebaut: Klasse 5 (to be, have got, simple present, present progressive, Prono
 Klasse 6 (simple past, unregelmäßige Verben S. 206–207 mit 89 Verben, past progressive, Steigerung,
 Modalverben + Ersatzformen G16, present perfect). Alle Sätze und Erklärungen sind selbst geschrieben.
 
+## Englischarbeit Nr. 2 (7.12.2026) – Paket `data/ka2-london.js`
+
+Nach Lukas' Themenliste: simple past (G1) · going to future (G2) · alle Zeiten gemischt · Steigerung (G3) ·
+Fragen mit Fragewörtern · Weg erklären (Dialog) · Lesen/Hören · Unit 2 London und die Mudlark-Geschichte.
+
+- **Vokabeln:** Unit „London & Weg erklären“ (61 Wörter, *eigene Liste*, nicht die Klett-Liste): Sehenswürdigkeiten,
+  Mudlark-Wörter, Wegbeschreibung. Kommt die echte Unit-2-Liste dazu, teilen gleiche Wörter ihren Lernstand.
+- **Grammatik (neu):** going to future · Alle Zeiten mischen · Fragen mit Fragewörtern · Den Weg erklären (Dialog) ·
+  Mia, the mudlark (eigene Geschichte, simple past, Lese- und Hörverstehen). Steigerung um London-Sätze ergänzt.
+- **Neue Aufgabenarten:** `hören | Text >> Frage | Antwort` (Text wird vorgelesen, 🐢 langsam; ohne `>> Frage` = Diktat)
+  und `lesen | Text >> Frage | Antwort` (Text wird gezeigt). Ohne Sprachausgabe zeigt „hören“ den Text.
+- **Klassenarbeit:** Datum, Units und Themen sind fest eingebaut und werden auf jedem Gerät **einmal** gesetzt
+  (`EB.data.defaultTest`); danach gilt, was im Elternbereich steht.
+
 ## Wie geplant wird (Wiederholung)
 
 Leitner-Kästen 0–6, absichtlich einfach (`js/srs.js`):

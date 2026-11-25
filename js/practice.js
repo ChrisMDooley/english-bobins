@@ -229,10 +229,21 @@
       card.appendChild(h('p', { class: 'kicker' }, [h('span', { text: mod ? mod.title : 'Grammatik' }), h('span', { class: 'kicker-sub', text: ' · ' + (mod && mod.concepts[it.concept] && it.concept !== it.mod ? mod.concepts[it.concept] : t.typeName) })]));
       card.appendChild(h('p', { class: 'instr', rich: t.instr }));
       var qEl = h('p', { class: 'gq', lang: t.de ? 'de' : 'en' });
-      if (t.words) t.words.forEach(function (wd) { qEl.appendChild(h('button', { class: 'chip word', type: 'button', text: wd, onclick: function () { inp.value = (inp.value ? inp.value.replace(/\s+$/, '') + ' ' : '') + wd; inp.focus(); } })); });
+      if (t.listen || t.read) {
+        var noVoice = t.listen && !EB.speech.supported;
+        if (t.read || noVoice) card.appendChild(h('div', { class: 'card reading', lang: 'en' }, [h('p', { text: t.text })]));
+        if (t.listen && !noVoice) {
+          var play = function (rate) { EB.speech.speak(t.text, { lang: 'en', rate: rate, voice: (st && st.voice) || '' }); };
+          card.appendChild(h('div', { class: 'row listen-row' }, [
+            h('button', { class: 'btn primary', type: 'button', text: '🔊 Anhören', onclick: function () { play((st && st.rate) || 0.85); inp.focus(); } }),
+            h('button', { class: 'btn soft', type: 'button', text: '🐢 Langsam', onclick: function () { play(0.6); inp.focus(); } })]));
+          setTimeout(function () { play((st && st.rate) || 0.85); }, 350);
+        }
+        if (t.question) qEl.appendChild(document.createTextNode(t.question));
+      } else if (t.words) t.words.forEach(function (wd) { qEl.appendChild(h('button', { class: 'chip word', type: 'button', text: wd, onclick: function () { inp.value = (inp.value ? inp.value.replace(/\s+$/, '') + ' ' : '') + wd; inp.focus(); } })); });
       else String(t.q).split(/(_{2,})/).forEach(function (part) { qEl.appendChild(/^_{2,}$/.test(part) ? h('span', { class: 'gap', text: '…' }) : document.createTextNode(part)); });
-      card.appendChild(h('div', { class: 'prompt-row' }, [qEl, t.de ? null : U.sayButton(it.q.replace(/_{2,}/g, '…').replace(/\([^)]*\)/g, ''), 'en')]));
-      var inp = U.input({ class: 'answer-in' + (t.whole ? ' wide' : ''), 'aria-label': t.whole ? 'der ganze Satz auf Englisch' : 'das fehlende Wort', lang: 'en', placeholder: t.whole ? 'Schreib den ganzen Satz …' : '' });
+      card.appendChild(h('div', { class: 'prompt-row' }, [qEl, (t.de || t.listen || t.read) ? null : U.sayButton(it.q.replace(/_{2,}/g, '…').replace(/\([^)]*\)/g, ''), 'en')]));
+      var inp = U.input({ class: 'answer-in' + (t.whole ? ' wide' : ''), 'aria-label': t.whole ? 'der ganze Satz auf Englisch' : 'das fehlende Wort', lang: 'en', placeholder: t.question ? 'Deine Antwort …' : t.whole ? 'Schreib den ganzen Satz …' : '' });
       var checkBtn = h('button', { class: 'btn primary check', type: 'submit', text: test ? 'Weiter ›' : 'Prüfen' });
       var gform = h('form', { class: 'answer-row' + (t.whole ? ' col' : ''), onsubmit: function (e) { e.preventDefault(); submit(inp.value); } }, [inp, checkBtn]);
       card.appendChild(gform);
@@ -287,6 +298,7 @@
         state.shown = true; fb.innerHTML = '';
         var box = h('div', { class: 'fb-box show' }, [h('p', { class: 'fb-title', text: 'So ist es richtig:' }), h('p', { class: 'answer-big', lang: 'en' }, [G.filled(it, it.answers[0]), ' ', U.sayButton(G.filled(it, it.answers[0]), 'en')])]);
         if (r && r.words && t.whole) { box.appendChild(h('p', { class: 'lab', text: 'Was anders war:' })); box.appendChild(sentenceView(r)); }
+        if (t.listen && t.question) box.appendChild(h('p', { class: 'soft-line', lang: 'en', text: 'Gesagt wurde: „' + t.text + '“' }));
         if (it.why) box.appendChild(h('p', { rich: it.why }));
         else (r && r.hints || []).forEach(function (x) { box.appendChild(h('p', { rich: x })); });
         if (it.answers.length > 1) box.appendChild(h('p', { class: 'soft-line', text: 'Auch richtig: ' + it.answers.slice(1).join(' · ') }));

@@ -49,6 +49,21 @@
     for (var c in b.coins) if (!(c in d.coins)) d.coins[c] = b.coins[c];
     return d;
   };
+  // a Klassenarbeit that ships with the app (data/ka2-london.js …): set once per device, afterwards the parent decides
+  P.applyDefaultTest = function () {
+    var t = root.EB && root.EB.data && root.EB.data.defaultTest, d = this.doc;
+    if (!t || !t.id) return false;
+    d.testsApplied = d.testsApplied || {};
+    if (d.testsApplied[t.id]) return false;
+    d.testsApplied[t.id] = Date.now();
+    var today = new Date().toISOString().slice(0, 10);
+    if (t.date >= today && !(d.test.date && d.test.date > t.date)) {
+      d.test = { date: t.date, label: t.label, units: (t.units || []).slice(), modules: (t.modules || []).slice() };
+      if (t.activeUnits) d.settings.activeUnits = (d.settings.activeUnits || []).filter(function (u) { return t.activeUnits.indexOf(u) < 0; }).concat(t.activeUnits);
+    }
+    this.save();
+    return true;
+  };
   P.save = function () {
     var d = this.doc;
     if (d.log.length > 4000) d.log = d.log.slice(-3000);

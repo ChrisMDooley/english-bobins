@@ -214,5 +214,31 @@ ok(store.doc.log.length < 4000, 'log bounded', store.doc.log.length);
 let line = ctx.RBEnglish.cardInfo('sim');
 ok(typeof line === 'string' && line.length > 3, 'card line', line);
 
+// ---------------------------------------------------------------- Klassenarbeit Nr. 2 package (data/ka2-london.js)
+{
+  const k = require('./load.js')(), KE = k.EB, kc = new KE.Content(), ks = new KE.Store('ka2');
+  const dt = KE.data.defaultTest;
+  ok(kc.unitById['ka2-london'] && kc.wordsIn(['ka2-london']).length >= 50, 'London unit with words');
+  ['k6-goingto', 'k6-tenses', 'k6-qwords', 'k6-directions', 'ka2-mudlark'].forEach(id => {
+    const m = kc.modById[id];
+    ok(m && !m.errors.length && m.items.length >= 20, 'module ' + id, m && m.errors);
+    (m ? m.items : []).forEach(it => it.answers.forEach(a => { if (!KE.check.sentence(a, it.answers).exact) ok(false, 'answer accepted ' + id, a); }));
+  });
+  const types = {}; ['k6-directions', 'ka2-mudlark'].forEach(id => kc.modById[id].items.forEach(it => { types[it.type] = (types[it.type] || 0) + 1; }));
+  ok(types.hoeren >= 4 && types.lesen >= 4, 'listening and reading tasks', types);
+  const dict = kc.modById['ka2-mudlark'].items.find(it => it.type === 'hoeren' && it.q.indexOf('>>') < 0);
+  ok(dict && dict.answers[0] === dict.q && KE.grammar.task(dict).listen && !KE.grammar.task(dict).question, 'dictation: answer = spoken text');
+  const rd = KE.grammar.task(kc.modById['ka2-mudlark'].items.find(it => it.type === 'lesen'));
+  ok(rd.read && rd.text.length > 100 && rd.question, 'reading task splits text and question', rd);
+  ok(dt && dt.date === '2026-12-07', 'built-in Klassenarbeit date');
+  if (new Date().toISOString().slice(0, 10) <= dt.date) {
+    ok(ks.applyDefaultTest() && ks.doc.test.label === 'Englischarbeit Nr. 2' && ks.doc.test.modules.length === 8, 'default test applied', ks.doc.test);
+    ks.setTest({ label: 'Mein Test' });
+    ok(!ks.applyDefaultTest() && ks.doc.test.label === 'Mein Test', 'applied only once — the parent wins afterwards');
+    const pr = KE.session.build('probe', kc, ks, {});
+    ok(pr.plan.words === 20 && pr.plan.gram === 8 && pr.steps.every(x => x.kind !== 'word' || x.word.unit === 'ka2-london'), 'Probe uses the London words', pr.plan);
+  }
+}
+
 console.log(`logic: ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

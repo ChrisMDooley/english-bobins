@@ -279,3 +279,7 @@ textarea.mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size
 .help summary { cursor: pointer; font-weight: 700; }
 @media (max-width: 560px) { .run-head { gap: 8px; } .run-title { font-size: .9em; } .run-head .link.small { padding: 6px 2px; } }
 .answer-big .btn.say { font-size: 1rem; }
+
+/* Lesen / Hören (Klassenarbeit-Paket Nr. 2) */
+.card.reading { background: var(--navy-soft); border-left: 4px solid var(--navy); box-shadow: none; padding: .8rem 1rem; margin: .4rem 0 .6rem; font-size: 1.08em; line-height: 1.55; }
+.listen-row { gap: .5rem; margin: .4rem 0 .6rem; flex-wrap: wrap; }

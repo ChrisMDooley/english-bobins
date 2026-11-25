@@ -1,7 +1,7 @@
 // Loads the app's logic files (no DOM) into one shared context for node tests.
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.join(__dirname, '..');
-const FILES = ['js/text.js', 'data/irregular.js', 'js/check.js', 'data/demo.js', 'data/grammar.js', 'data/vocab.js',
+const FILES = ['js/text.js', 'data/irregular.js', 'js/check.js', 'data/demo.js', 'data/grammar.js', 'data/vocab.js', 'data/ka2-london.js',
   'js/grammar.js', 'js/content.js', 'js/srs.js', 'js/store.js', 'js/session.js', 'rb-card.js'];
 module.exports = function load(extra, store) {
   store = store || {};
