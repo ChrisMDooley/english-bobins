@@ -1,8 +1,8 @@
 /* sw.js — English-Bobins offline cache. Network first (updates arrive), cache as fallback.
    Bump VERSION on every release. */
-const VERSION = 'english-v1.1.0';
+const VERSION = 'english-v1.2.0';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'css/english.css', 'icons/icon.svg',
-  'js/text.js', 'data/irregular.js', 'js/check.js', 'data/demo.js', 'data/grammar.js', 'data/vocab.js', 'data/ka2-london.js', 'js/grammar.js', 'js/content.js',
+  'js/text.js', 'data/irregular.js', 'js/check.js', 'data/demo.js', 'data/grammar.js', 'data/vocab.js', 'data/ka2-london.js', 'data/ka2-book.js', 'js/grammar.js', 'js/content.js',
   'js/srs.js', 'js/store.js', 'js/session.js', 'js/speech.js', 'js/platform.js', 'js/ui.js', 'js/practice.js', 'js/screens.js', 'js/parent.js', 'js/app.js',
   'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2',
   'fonts/OpenDyslexic-Regular.woff', 'fonts/OpenDyslexic-Bold.woff'];

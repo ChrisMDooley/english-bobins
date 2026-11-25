@@ -39,14 +39,14 @@ ok(imp.added === 0 && imp.skipped === 1, 'exact duplicate skipped', imp);
 
 // CSV with header, quotes, semicolons, a new unit
 let csv = '﻿englisch;deutsch;englisch_auch;deutsch_auch;beispiel;beispiel_deutsch;wortart;klasse;unit;seite;tags\r\n' +
-  '"(to) go (went, gone)";gehen;;fahren;"We go, they go.";;Verb;6;Unit 2;160;unregelmäßig\r\nsuitcase;Koffer;;;;;Nomen;6;Unit 2;161;\r\n';
+  '"(to) go (went, gone)";gehen;;fahren;"We go, they go.";;Verb;6;Unit 7;160;unregelmäßig\r\nsuitcase;Koffer;;;;;Nomen;6;Unit 7;161;\r\n';
 let cres = content.parseCsv(csv, {});
 ok(cres.header && cres.rows.length === 2, 'csv rows', cres);
 ok(cres.rows[0].example === 'We go, they go.' && cres.rows[0].type === 'verb' && cres.rows[0].deAlt[0] === 'fahren', 'csv fields', cres.rows[0]);
-ok(cres.rows[1].unit === 'new:Unit 2', 'csv unknown unit pending', cres.rows[1].unit);
-ok(!content.units.some(u => u.name === 'Unit 2'), 'preview does not create units');
+ok(cres.rows[1].unit === 'new:Unit 7', 'csv unknown unit pending', cres.rows[1].unit);
+ok(!content.units.some(u => u.name === 'Unit 7'), 'preview does not create units');
 imp = content.importRows(cres.rows, {});
-ok(imp.added === 2 && content.units.some(u => u.name === 'Unit 2'), 'import creates Unit 2', imp);
+ok(imp.added === 2 && content.units.some(u => u.name === 'Unit 7'), 'import creates Unit 7', imp);
 let csvNoHead = content.parseCsv('apple,Apfel\npear,Birne\n', {});
 ok(csvNoHead.rows.length === 2 && csvNoHead.rows[1].de === 'Birne', 'csv without header (comma)', csvNoHead.rows);
 let out = content.toCsv();
@@ -202,7 +202,7 @@ for (let day = 0; day < 30; day++) {
 }
 ctx.Date.now = realNow;
 let cAll = store.counts(content.uniqueWords()); if (process.env.SIM) console.log('sim', JSON.stringify(cAll), firstRate.map(x => Math.round(x * 100)).join(' '));
-ok(cAll.neu < cAll.total * 0.5, 'after 30 days most words were met', cAll);
+ok(cAll.total - cAll.neu >= 80, 'after 30 days 80+ words were met', cAll);
 ok(cAll.sicher + cAll.fast > 20, 'after 30 days many words (fast) sicher', cAll);
 let avg = a => a.reduce((x, y) => x + y, 0) / a.length;
 ok(avg(firstRate.slice(-7)) > avg(firstRate.slice(0, 7)), 'first-try rate improves', [avg(firstRate.slice(0, 7)), avg(firstRate.slice(-7))]);
@@ -232,11 +232,11 @@ ok(typeof line === 'string' && line.length > 3, 'card line', line);
   ok(rd.read && rd.text.length > 100 && rd.question, 'reading task splits text and question', rd);
   ok(dt && dt.date === '2026-12-07', 'built-in Klassenarbeit date');
   if (new Date().toISOString().slice(0, 10) <= dt.date) {
-    ok(ks.applyDefaultTest() && ks.doc.test.label === 'Englischarbeit Nr. 2' && ks.doc.test.modules.length === 8, 'default test applied', ks.doc.test);
+    ok(ks.applyDefaultTest() && ks.doc.test.label === 'Englischarbeit Nr. 2' && ks.doc.test.modules.length === 9 && ks.doc.test.units.indexOf('gl2-u2') >= 0, 'default test applied', ks.doc.test);
     ks.setTest({ label: 'Mein Test' });
     ok(!ks.applyDefaultTest() && ks.doc.test.label === 'Mein Test', 'applied only once — the parent wins afterwards');
     const pr = KE.session.build('probe', kc, ks, {});
-    ok(pr.plan.words === 20 && pr.plan.gram === 8 && pr.steps.every(x => x.kind !== 'word' || x.word.unit === 'ka2-london'), 'Probe uses the London words', pr.plan);
+    ok(pr.plan.words === 20 && pr.plan.gram === 8 && pr.steps.every(x => x.kind !== 'word' || /^(ka2-london|gl2-u2)$/.test(x.word.unit)), 'Probe uses the exam words', pr.plan);
   }
 }
 

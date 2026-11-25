@@ -241,14 +241,14 @@ with sync_playwright() as p:
     # units: a new unit, marked aktuell
     pg.click('.ptab:has-text("Units")'); pg.wait_for_selector('.ptable.units')
     pg.click('text=+ Neue Unit'); pg.wait_for_selector('.modal')
-    pg.fill('.modal .field:has-text("Name") input', 'Unit 2'); pg.fill('.modal .field:has-text("Titel") input', 'A trip to Scotland')
+    pg.fill('.modal .field:has-text("Name") input', 'Unit 5'); pg.fill('.modal .field:has-text("Titel") input', 'A trip to Scotland')
     pg.click('.modal .btn.primary'); pg.wait_for_timeout(100)
-    check(pg.locator('.ptable.units .pt-row', has_text='Unit 2').count() == 1, 'unit created')
-    pg.locator('.ptable.units .pt-row', has_text='Unit 2').locator('input[type=checkbox]').check(); pg.wait_for_timeout(50)
+    check(pg.locator('.ptable.units .pt-row', has_text='Unit 5').count() == 1, 'unit created')
+    pg.locator('.ptable.units .pt-row', has_text='Unit 5').locator('input[type=checkbox]').check(); pg.wait_for_timeout(50)
 
     # paste import with preview
     pg.click('.ptab:has-text("Hinzufügen")'); pg.wait_for_selector('textarea.paste')
-    unit_id = pg.evaluate("() => EB.app.content.units.find(u => u.name === 'Unit 2').id")
+    unit_id = pg.evaluate("() => EB.app.content.units.find(u => u.name === 'Unit 5').id")
     pg.select_option('.row .field:has-text("Unit") select', unit_id)
     pg.fill('textarea.paste', 'bagpipes [ˈbæɡpaɪps] – Dudelsack\n(to) explore = erkunden\nloch\tSee (in Schottland)\tLoch Ness is a loch.\nweather – Wetter\nkilt')
     pg.click('button:has-text("Vorschau")'); pg.wait_for_selector('.preview-t')
@@ -263,7 +263,7 @@ with sync_playwright() as p:
     # CSV import through the file chooser
     csv_path = os.path.join(OUT, 'test-import.csv')
     with open(csv_path, 'w', encoding='utf-8') as f:
-        f.write('englisch;deutsch;englisch_auch;deutsch_auch;beispiel;beispiel_deutsch;wortart;klasse;unit;seite;tags\n"castle";Burg;;Schloss;;;Nomen;6;Unit 2;12;\nghost;Geist;;Gespenst;"The castle has a ghost.";;Nomen;6;Unit 2;12;\n')
+        f.write('englisch;deutsch;englisch_auch;deutsch_auch;beispiel;beispiel_deutsch;wortart;klasse;unit;seite;tags\n"castle";Burg;;Schloss;;;Nomen;6;Unit 5;12;\nghost;Geist;;Gespenst;"The castle has a ghost.";;Nomen;6;Unit 5;12;\n')
     with pg.expect_file_chooser() as fc:
         pg.click('button:has-text("CSV-Datei wählen")')
     fc.value.set_files(csv_path); pg.wait_for_selector('.preview-t >> nth=0')
@@ -286,8 +286,8 @@ with sync_playwright() as p:
         pg.fill('.answer-in', str(int(m.group(1)) * int(m.group(2))) if m else os.environ.get('RB_PARENT_PIN', '')); pg.press('.answer-in', 'Enter'); pg.wait_for_selector('.ptabs')
     ex = pg.evaluate("() => { const w = EB.app.content.words.find(w => w.en === 'bagpipes'); return w && w.example; }")
     check(ex == 'He plays the bagpipes.', 'edited word survives reload', ex)
-    n_unit2 = pg.evaluate("() => EB.app.content.wordsIn([EB.app.content.units.find(u => u.name === 'Unit 2').id]).length")
-    check(n_unit2 == 7, '7 words in Unit 2', n_unit2)
+    n_unit2 = pg.evaluate("() => EB.app.content.wordsIn([EB.app.content.units.find(u => u.name === 'Unit 5').id]).length")
+    check(n_unit2 == 7, '7 words in Unit 5', n_unit2)
 
     # grammar editor: a new module with one error line
     pg.goto(URL + '?child=lukas#/eltern/grammatik'); pg.wait_for_selector('.ptable.mods')
@@ -303,7 +303,7 @@ with sync_playwright() as p:
     # Klassenarbeit
     pg.click('.ptab:has-text("Klassenarbeit")'); pg.wait_for_selector('input[type=date]')
     pg.fill('input[type=date]', '2026-12-01')
-    pg.locator('.checks').first.locator('label', has_text='Unit 2').locator('input').check()
+    pg.locator('.checks').first.locator('label', has_text='Unit 5').locator('input').check()
     pg.locator('.checks').nth(1).locator('label', has_text='Simple past').locator('input').check()
     pg.click('.pbody .btn.primary:has-text("Speichern")'); pg.wait_for_timeout(80)
     # settings
@@ -334,7 +334,7 @@ with sync_playwright() as p:
     pg.goto(URL + '?child=lukas#/home'); pg.wait_for_selector('.today-btn')
     check('arbeit' in pg.inner_text('.hero'), 'countdown on the start page', pg.inner_text('.hero'))
     pg.click('.tile:has-text("Klassenarbeit")'); pg.wait_for_selector('.big-actions')
-    check('Unit 2' in pg.inner_text('main') and 'Simple past' in pg.inner_text('main'), 'test page shows what comes up')
+    check('Unit 5' in pg.inner_text('main') and 'Simple past' in pg.inner_text('main'), 'test page shows what comes up')
     pg.click('.list-item:has-text("Probe-Klassenarbeit")'); pg.wait_for_selector('.run-body .card')
     check(pg.locator('.run-body .tools .btn').count() == 0, 'probe: no help button')
     k = 0

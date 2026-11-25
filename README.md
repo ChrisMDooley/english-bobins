@@ -100,6 +100,11 @@ Fragen mit Fragewörtern · Weg erklären (Dialog) · Lesen/Hören · Unit 2 Lon
   Mia, the mudlark (eigene Geschichte, simple past, Lese- und Hörverstehen). Steigerung um London-Sätze ergänzt.
 - **Neue Aufgabenarten:** `hören | Text >> Frage | Antwort` (Text wird vorgelesen, 🐢 langsam; ohne `>> Frage` = Diktat)
   und `lesen | Text >> Frage | Antwort` (Text wird gezeigt). Ohne Sprachausgabe zeigt „hören“ den Text.
+- **Aus dem Buch (`data/ka2-book.js`, Fotos vom 25.11.):** Unit „Unit 2“ mit 70 Wörtern von Green Line 2 S. 34–43
+  (Wortkästen und Texte, Deutsch von uns – die Vokabelseiten hinten im Buch fehlen noch). G1/G1d/G2/G3 nach Buch S. 189–193:
+  -ed-Schreibung und -Aussprache, was/were, Kurzantworten, Subjekt-/Objektfragen, Verb + Präposition,
+  simpler/narrower/cleverer, as … as / not as … as, than/then. Neues Modul „Unit 2: London & die Kwans (Texte)“ –
+  Lese-/Hörfragen zu eigenen Kurzfassungen der Buchtexte (die Buchtexte selbst sind nicht kopiert).
 - **Klassenarbeit:** Datum, Units und Themen sind fest eingebaut und werden auf jedem Gerät **einmal** gesetzt
   (`EB.data.defaultTest`); danach gilt, was im Elternbereich steht.
 

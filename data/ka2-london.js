@@ -218,7 +218,7 @@
         'lücke [word] | ___ is your favourite sight? – Tower Bridge. | What ; Which',
         'lücke [word] | ___ are you crying? – Because I lost my ticket. | Why',
         'lücke [word] | ___ old is Big Ben? – More than 160 years. | How',
-        'lücke [word] | ___ many people live in London? – About nine million. | How',
+        'lücke [word] | ___ many people live in London? – More than eight million. | How',
         'lücke [word] | ___ much is a ticket for the London Eye? – About 30 pounds. | How',
         'lücke [word] | ___ found the coin? – Mia did. | Who',
         'lücke [word] | ___ bag is this? – It\'s Tom\'s. | Whose',
